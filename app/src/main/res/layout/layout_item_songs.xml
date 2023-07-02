@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_launcher_background"
+        android:id="@+id/ivSong"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/ivSong"
+        android:id="@+id/tvSongName"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@id/tvSongDuration"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Give me some sunsine"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/tvSongName"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/tvSongDuration"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="4:43"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/ivSong"
+        android:id="@+id/tvSongAlbum"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toStartOf="@id/tvSongDuration"
+        app:layout_constraintTop_toBottomOf="@id/tvSongName"
+        tools:text="3 Idiots"
+        android:layout_marginStart="8dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
