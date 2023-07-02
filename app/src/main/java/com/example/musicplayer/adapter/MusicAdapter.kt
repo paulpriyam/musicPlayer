@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.musicplayer.PlayerActivity
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.LayoutItemSongsBinding
 import com.example.musicplayer.model.Music
+import com.example.musicplayer.ui.PlayerActivity
 import com.example.musicplayer.util.FormatDuration
 
 class MusicAdapter(private val context: Context) :
@@ -47,6 +47,8 @@ class MusicAdapter(private val context: Context) :
 
             binding.root.setOnClickListener {
                 val intent = Intent(context, PlayerActivity::class.java)
+                intent.putExtra("path", music.path)
+                intent.putExtra("class", "MusicAdapter")
                 ContextCompat.startActivity(context, intent, null)
             }
         }

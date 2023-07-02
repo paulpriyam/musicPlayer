@@ -1,4 +1,4 @@
-package com.example.musicplayer
+package com.example.musicplayer.ui
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicplayer.R
 import com.example.musicplayer.adapter.MusicAdapter
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.example.musicplayer.model.Music
@@ -72,7 +73,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         viewModel.musicList.observe(this) {
             musicAdapter.asyncListDiffer.submitList(it)
-            binding.tvTotalSongs.text = musicAdapter.asyncListDiffer.currentList.size.toString()
+            binding.tvTotalSongs.text =
+                "Total Songs: " + musicAdapter.asyncListDiffer.currentList.size.toString()
         }
     }
 
