@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     companion object {
         const val EXTERNAL_STORAGE_REQUEST_CODE = 13
+        var musicList: ArrayList<Music> = arrayListOf()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +74,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         viewModel.musicList.observe(this) {
             musicAdapter.asyncListDiffer.submitList(it)
+            musicList.addAll(it)
             binding.tvTotalSongs.text =
                 "Total Songs: " + musicAdapter.asyncListDiffer.currentList.size.toString()
         }

@@ -47,7 +47,7 @@ class MusicAdapter(private val context: Context) :
 
             binding.root.setOnClickListener {
                 val intent = Intent(context, PlayerActivity::class.java)
-                intent.putExtra("path", music.path)
+                intent.putExtra("index", adapterPosition)
                 intent.putExtra("class", "MusicAdapter")
                 ContextCompat.startActivity(context, intent, null)
             }

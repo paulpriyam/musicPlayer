@@ -71,7 +71,7 @@
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:icon="@drawable/ic_play"
+        app:icon="@drawable/ic_pause"
         android:id="@+id/fabPlay"
         app:shapeAppearanceOverlay="@style/curved"
         app:layout_constraintStart_toEndOf="@id/fabPrevious"
