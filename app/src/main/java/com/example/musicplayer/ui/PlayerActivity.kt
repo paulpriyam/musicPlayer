@@ -18,6 +18,7 @@ class PlayerActivity : AppCompatActivity() {
 
     companion object {
         var musicListPA: ArrayList<Music> = arrayListOf()
+        var position: Int = 0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,12 +28,31 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
         musicListPA.clear()
         musicListPA.addAll(MainActivity.musicList)
-        val position = intent.getIntExtra("index", 0)
+        position = intent.getIntExtra("index", 0)
+        mediaPlayer = MediaPlayer()
+        setLayout()
+        setMediaPlayer()
+
+
+
+        binding.fabPlay.setOnClickListener {
+            if (isPlaying) setPauseButton()
+            else setPlayButton()
+        }
+
+        binding.fabNext.setOnClickListener {
+            setNextPreviousSong(true)
+        }
+        binding.fabPrevious.setOnClickListener {
+            setNextPreviousSong(false)
+        }
+    }
+
+    private fun setLayout() {
         val songPath = musicListPA.get(position).path
         val songTitle = musicListPA.get(position).title
         val songAlbum = musicListPA.get(position).album
         val endTime = musicListPA.get(position).duration.FormatDuration()
-
         Glide.with(this)
             .load(songPath)
             .apply(RequestOptions.placeholderOf(R.drawable.ic_music)).centerCrop()
@@ -43,20 +63,19 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.tvEndTime.text = endTime
         binding.tvSongAlbum.text = songAlbum
+        if(isPlaying) binding.fabPlay.setIconResource(R.drawable.ic_pause)
+        else binding.fabPlay.setIconResource(R.drawable.ic_play)
+    }
 
+    private fun setMediaPlayer() {
         when (intent.getStringExtra("class")) {
             "MusicAdapter" -> {
-                mediaPlayer = MediaPlayer()
                 mediaPlayer.reset()
-                mediaPlayer.setDataSource(songPath)
+                mediaPlayer.setDataSource(musicListPA.get(position).path)
                 mediaPlayer.prepare()
                 mediaPlayer.start()
                 isPlaying = true
             }
-        }
-        binding.fabPlay.setOnClickListener {
-            if (isPlaying) setPauseButton()
-            else setPlayButton()
         }
     }
 
@@ -75,5 +94,23 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         mediaPlayer.stop()
         super.onDestroy()
+    }
+
+    private fun setNextPreviousSong(increase: Boolean) {
+        if (increase) {
+            setSongPosition(true)
+        } else {
+            setSongPosition(false)
+        }
+        setMediaPlayer()
+        setLayout()
+    }
+
+    private fun setSongPosition(increment: Boolean) {
+        if (increment) {
+            if (musicListPA.size - 1 == position) position = 0 else ++position
+        } else {
+            if (position == 0) position = musicListPA.size - 1 else --position
+        }
     }
 }
