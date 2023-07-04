@@ -135,6 +135,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
         val binder = service as MusicService.MyBinder
         musicService = binder.currentService()
         setMediaPlayer()
+        musicService?.showNotification(
+            musicListPA.get(position).title,
+            musicListPA.get(position).artist
+        )
 
     }
 
