@@ -6,5 +6,6 @@ class Constants {
         const val NOTIFICATION_PLAY = "play"
         const val NOTIFICATION_PREVIOUS = "previous"
         const val NOTIFICATION_NEXT = "next"
+        const val NOTIFICATION_EXIT = "exit"
     }
 }
