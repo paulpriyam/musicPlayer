@@ -158,8 +158,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
         musicService = binder.currentService()
         setMediaPlayer()
         musicService?.showNotification(
-            musicListPA.get(position).title,
-            musicListPA.get(position).artist,
+            musicListPA.get(position),
             true
         )
     }
@@ -173,8 +172,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
         if (isPlaying.value == true) setPauseButton()
         else setPlayButton()
         musicService?.showNotification(
-            musicListPA.get(position).title,
-            musicListPA.get(position).artist, !(isPlaying.value ?: false)
+            musicListPA.get(position), !(isPlaying.value ?: false)
         )
     }
 
@@ -182,8 +180,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
     override fun onNext() {
         setNextPreviousSong(true)
         musicService?.showNotification(
-            musicListPA.get(position).title,
-            musicListPA.get(position).artist, true
+            musicListPA.get(position), true
         )
     }
 
@@ -191,8 +188,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
     override fun onPrevious() {
         setNextPreviousSong(false)
         musicService?.showNotification(
-            musicListPA.get(position).title,
-            musicListPA.get(position).artist,
+            musicListPA.get(position),
             true
         )
     }

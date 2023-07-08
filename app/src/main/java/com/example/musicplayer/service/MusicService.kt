@@ -12,7 +12,9 @@ import android.support.v4.media.session.MediaSessionCompat
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.musicplayer.R
+import com.example.musicplayer.model.Music
 import com.example.musicplayer.util.Constants
+import com.example.musicplayer.util.getImageArt
 import com.example.receiver.MusicBroadcastReceiver
 
 class MusicService : Service() {
@@ -32,7 +34,13 @@ class MusicService : Service() {
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
-    fun showNotification(title: String, artist: String, isPlaying: Boolean) {
+    fun showNotification(music: Music, isPlaying: Boolean) {
+        val imageArt = getImageArt(music.path)
+        val image = if (imageArt != null) {
+            BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+        } else {
+            BitmapFactory.decodeResource(resources, R.drawable.ic_music)
+        }
         val prevIntent = Intent(
             baseContext,
             MusicBroadcastReceiver::class.java
@@ -79,10 +87,10 @@ class MusicService : Service() {
 
         val notification =
             NotificationCompat.Builder(baseContext, Constants.NOTIFICATION_CHANNEL_ID)
-                .setContentText(title)
-                .setContentTitle(artist)
+                .setContentText(music.title)
+                .setContentTitle(music.artist)
                 .setSmallIcon(R.drawable.ic_add_playlist)
-                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_music))
+                .setLargeIcon(image)
                 .setStyle(
                     androidx.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.sessionToken)
