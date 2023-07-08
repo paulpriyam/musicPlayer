@@ -198,6 +198,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
     }
 
     override fun onExit() {
+        musicService?.stopForeground(true)
+        musicService = null
         exitProcess(1)
     }
 
