@@ -26,6 +26,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
         value = true
     }
     private val musicBroadcastReceiver = object : BroadcastReceiver() {
+        @RequiresApi(Build.VERSION_CODES.S)
         override fun onReceive(p0: Context?, p1: Intent?) {
             val action = p1?.extras?.getString("actions")
             when (action) {
@@ -131,11 +132,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
         binding.fabPlay.setIconResource(R.drawable.ic_play)
     }
 
-    override fun onDestroy() {
-        musicService?.mediaPlayer?.stop()
-        unregisterReceiver(musicBroadcastReceiver)
-        super.onDestroy()
-    }
 
     private fun setNextPreviousSong(increase: Boolean) {
         if (increase) {
@@ -178,7 +174,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
         else setPlayButton()
         musicService?.showNotification(
             musicListPA.get(position).title,
-            musicListPA.get(position).artist, isPlaying.value ?: false
+            musicListPA.get(position).artist, !(isPlaying.value ?: false)
         )
     }
 
@@ -203,6 +199,12 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
 
     override fun onExit() {
         exitProcess(1)
+    }
+
+    override fun onDestroy() {
+        musicService?.mediaPlayer?.stop()
+        unregisterReceiver(musicBroadcastReceiver)
+        super.onDestroy()
     }
 
 }
