@@ -3,10 +3,12 @@ package com.example.musicplayer.ui
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -73,6 +75,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             getStoragePermission()
         }
         viewModel.musicList.observe(this) {
+            binding.pbLoadSongs.visibility = View.GONE
             musicAdapter.asyncListDiffer.submitList(it)
             musicList.addAll(it)
             binding.tvTotalSongs.text =
@@ -81,9 +84,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun getStoragePermission() {
-        val permission = arrayOf(
-            android.Manifest.permission.READ_MEDIA_AUDIO
-        )
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(
+                android.Manifest.permission.READ_MEDIA_AUDIO
+            )
+        } else {
+            arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
         requestPermissionLauncher.launch(permission)
     }
 
@@ -135,6 +142,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     @SuppressLint("Range")
     private fun getAllAudioFiles() {
+        binding.pbLoadSongs.visibility = View.VISIBLE
         val tempList = arrayListOf<Music>()
 
         val selection = MediaStore.Audio.Media.IS_MUSIC + " !=0"
