@@ -2,9 +2,9 @@ package com.example.musicplayer.ui
 
 import android.content.*
 import android.media.MediaPlayer
-import android.os.Build
-import android.os.Bundle
-import android.os.IBinder
+import android.os.*
+import android.util.Log
+import android.widget.SeekBar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
@@ -25,6 +25,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
     private var isPlaying = MutableLiveData<Boolean>().apply {
         value = true
     }
+    private lateinit var runner: Runnable
     private val musicBroadcastReceiver = object : BroadcastReceiver() {
         @RequiresApi(Build.VERSION_CODES.S)
         override fun onReceive(p0: Context?, p1: Intent?) {
@@ -81,6 +82,21 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
         binding.fabPrevious.setOnClickListener {
             setNextPreviousSong(false)
         }
+        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    musicService?.mediaPlayer?.seekTo(progress)
+                    val currentTime =
+                        musicService?.mediaPlayer?.currentPosition?.toLong()?.FormatDuration()
+                    binding.tvStartTime.text = currentTime
+                }
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) = Unit
+
+            override fun onStopTrackingTouch(p0: SeekBar?) = Unit
+
+        })
     }
 
     private fun startsService() {
@@ -94,6 +110,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
         val songPath = musicListPA.get(position).path
         val songTitle = musicListPA.get(position).title
         val songAlbum = musicListPA.get(position).album
+
         val endTime = musicListPA.get(position).duration.FormatDuration()
         Glide.with(this)
             .load(songPath)
@@ -102,7 +119,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
 
 
         binding.tvSongName.text = songTitle
-
         binding.tvEndTime.text = endTime
         binding.tvSongAlbum.text = songAlbum
     }
@@ -115,6 +131,12 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
                 musicService?.mediaPlayer?.setDataSource(musicListPA.get(position).path)
                 musicService?.mediaPlayer?.prepare()
                 musicService?.mediaPlayer?.start()
+                binding.seekBar.progress = musicService?.mediaPlayer?.currentPosition ?: 0
+                binding.seekBar.max = musicService?.mediaPlayer?.duration ?: 0
+                Log.d(
+                    "--->",
+                    "${musicService?.mediaPlayer?.currentPosition} ---- ${musicService?.mediaPlayer?.duration}"
+                )
                 isPlaying.postValue(true)
             }
         }
@@ -161,6 +183,19 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MusicControlListe
             musicListPA.get(position),
             true
         )
+        setSongCurrentTime()
+    }
+
+    private fun setSongCurrentTime() {
+        runner = Runnable {
+            val currentTime =
+                musicService?.mediaPlayer?.currentPosition?.toLong()?.FormatDuration()
+            binding.tvStartTime.text = currentTime
+            binding.seekBar.progress = musicService?.mediaPlayer?.currentPosition ?: 0
+            Log.d("--->","${musicService?.mediaPlayer?.currentPosition}")
+            Handler(Looper.getMainLooper()).postDelayed(runner,200)
+        }
+        Handler(Looper.getMainLooper()).postDelayed(runner,0)
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
